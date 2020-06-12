@@ -9,14 +9,16 @@ import me.GravityIO.BlockMiner.Miner;
 
 public class Commands implements CommandExecutor {
 
-	public String cmd1 = "mine";
+	public static String mineCmd = "mine";
+
+	private Miner miner = new Miner();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase(cmd1)) {
+		if (cmd.getName().equalsIgnoreCase(mineCmd)) {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
-				Miner.mine(player);
+				miner.mine(player);
 				return true;
 			}
 			sender.sendMessage("Only players can use this command!");

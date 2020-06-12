@@ -9,7 +9,8 @@ public class Main extends JavaPlugin {
 	public static Main main;
 
 	public void onEnable() {
-		this.getCommand(new Commands().cmd1).setExecutor(new Commands());
+		this.getCommand(Commands.mineCmd).setExecutor(new Commands());
+		this.saveDefaultConfig();
 		main = this;
 	}
 
