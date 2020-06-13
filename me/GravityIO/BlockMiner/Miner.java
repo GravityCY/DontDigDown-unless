@@ -26,14 +26,15 @@ public class Miner {
 		}
 
 		if (initMat != Material.BEDROCK) {
-			if (initMat != Material.AIR) {
-				if (Main.main.getConfig().getBoolean("safe-block-check-teleport"))
-					if (!teleportPlayerToSafeLocation(player)) {
-						String cannotFindLocMsg = evaluateColorCodes(
-								Main.main.getConfig().getString("cannot-find-safe-location"));
-						player.sendMessage(cannotFindLocMsg);
-						return;
-					}
+			if (initMat.isSolid()) {
+				if (!player.isFlying())
+					if (Main.main.getConfig().getBoolean("safe-block-check-teleport"))
+						if (!teleportPlayerToSafeLocation(player)) {
+							String cannotFindLocMsg = evaluateColorCodes(
+									Main.main.getConfig().getString("cannot-find-safe-location"));
+							player.sendMessage(cannotFindLocMsg);
+							return;
+						}
 				player.getInventory().addItem(new ItemStack(initMat));
 				initBlock.setType(Material.AIR);
 			}
@@ -48,7 +49,8 @@ public class Miner {
 				Block block = blockPos.getBlock();
 				if (block.getType() != Material.AIR) {
 					if (block.isLiquid()) {
-						if (isLiquidSource(block) && player.getInventory().contains(Material.BUCKET)) {
+						if (Main.main.getConfig().getBoolean("use-bucket-to-remove-liquids") && isLiquidSource(block)
+								&& player.getInventory().contains(Material.BUCKET)) {
 							int bucketIndex = player.getInventory().first(Material.BUCKET);
 							ItemStack bucket = player.getInventory().getItem(bucketIndex);
 							bucket.setAmount(bucket.getAmount() - 1);
@@ -110,30 +112,46 @@ public class Miner {
 		Block blockCheck;
 
 		blockCheck = blockUnder.getRelative(1, 0, 0);
-		if (!blockCheck.isEmpty()) {
-			if (blockCheck.getRelative(0, 1, 0).isEmpty() && blockCheck.getRelative(0, 2, 0).isEmpty()) {
-				player.teleport(player.getLocation().add(1, 0.05f, 0));
+		if (!blockCheck.isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+				Location telLoc = blockCheck.getLocation().clone();
+				telLoc.setPitch(player.getLocation().getPitch());
+				telLoc.setYaw(player.getLocation().getYaw());
+				telLoc.add(0.5f, 1, 0.5f);
+				player.teleport(telLoc);
 				return true;
 			}
 		}
 		blockCheck = blockUnder.getRelative(-1, 0, 0);
-		if (!blockCheck.isEmpty()) {
-			if (blockCheck.getRelative(0, 1, 0).isEmpty() && blockCheck.getRelative(0, 2, 0).isEmpty()) {
-				player.teleport(player.getLocation().add(-1, 0.05f, 0));
+		if (!blockCheck.isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+				Location telLoc = blockCheck.getLocation().clone();
+				telLoc.setPitch(player.getLocation().getPitch());
+				telLoc.setYaw(player.getLocation().getYaw());
+				telLoc.add(0.5f, 1, 0.5f);
+				player.teleport(telLoc);
 				return true;
 			}
 		}
 		blockCheck = blockUnder.getRelative(0, 0, 1);
-		if (!blockCheck.isEmpty()) {
-			if (blockCheck.getRelative(0, 1, 0).isEmpty() && blockCheck.getRelative(0, 2, 0).isEmpty()) {
-				player.teleport(player.getLocation().add(0, 0.05f, 1));
+		if (!blockCheck.isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+				Location telLoc = blockCheck.getLocation().clone();
+				telLoc.setPitch(player.getLocation().getPitch());
+				telLoc.setYaw(player.getLocation().getYaw());
+				telLoc.add(0.5f, 1, 0.5f);
+				player.teleport(telLoc);
 				return true;
 			}
 		}
 		blockCheck = blockUnder.getRelative(0, 0, -1);
-		if (!blockCheck.isEmpty()) {
-			if (blockCheck.getRelative(0, 1, 0).isEmpty() && blockCheck.getRelative(0, 2, 0).isEmpty()) {
-				player.teleport(player.getLocation().add(0, 0.05f, -1));
+		if (!blockCheck.isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+				Location telLoc = blockCheck.getLocation().clone();
+				telLoc.setPitch(player.getLocation().getPitch());
+				telLoc.setYaw(player.getLocation().getYaw());
+				telLoc.add(0.5f, 1, 0.5f);
+				player.teleport(telLoc);
 				return true;
 			}
 		}
