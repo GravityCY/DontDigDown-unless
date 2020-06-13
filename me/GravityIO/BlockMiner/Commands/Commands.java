@@ -1,5 +1,9 @@
 package me.GravityIO.BlockMiner.Commands;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +19,8 @@ public class Commands implements CommandExecutor {
 
 	private Miner miner = new Miner();
 
+	Map<UUID, Long> whenMined = new HashMap<UUID, Long>();
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase(mineCmd)) {
@@ -23,9 +29,20 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			Player player = (Player) sender;
+			UUID playerId = player.getUniqueId();
 			if (args.length == 0) {
-				miner.mine(player);
-				return true;
+				if (!whenMined.containsKey(playerId) || System.currentTimeMillis() >= whenMined.get(playerId)
+						+ (Main.main.getConfig().getInt("command-cooldown") * 1000)) {
+					miner.mine(player);
+					whenMined.put(playerId, System.currentTimeMillis());
+					return true;
+				} else {
+					player.sendMessage(ChatColor.RED + "You've recently used this command, wait "
+							+ (((whenMined.get(playerId) + Main.main.getConfig().getInt("command-cooldown") * 1000)
+									- System.currentTimeMillis()) / 1000)
+							+ " seconds");
+					return true;
+				}
 			} else {
 				if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
 					Main.main.reloadConfig();
