@@ -1,5 +1,7 @@
 package me.GravityIO.BlockMiner;
 
+import java.util.Iterator;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -73,8 +75,26 @@ public class Miner {
 							itemsGiven++;
 						}
 					} else {
-						player.getInventory().addItem(new ItemStack(block.getType()));
-						block.setType(Material.AIR);
+						if (Main.main.getConfig().getBoolean("mine-with-silk-touch")) {
+							if (block.getType() == Material.SPAWNER) {
+								if (Main.main.getConfig().getBoolean("silk-touch-spawners")) {
+									player.getInventory().addItem(new ItemStack(block.getType()));
+									block.setType(Material.AIR);
+								} else {
+									block.breakNaturally();
+								}
+							} else {
+								player.getInventory().addItem(new ItemStack(block.getType()));
+								block.setType(Material.AIR);
+							}
+						} else {
+							Iterator<ItemStack> drops = block.getDrops(new ItemStack(Material.DIAMOND_PICKAXE))
+									.iterator();
+							block.setType(Material.AIR);
+							if (drops.hasNext()) {
+								player.getInventory().addItem(drops.next());
+							}
+						}
 
 						if (blockSoundPlayed <= 5) {
 							player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 0.25f, 1);
