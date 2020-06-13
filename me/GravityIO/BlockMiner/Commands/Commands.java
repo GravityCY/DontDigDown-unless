@@ -31,8 +31,9 @@ public class Commands implements CommandExecutor {
 			Player player = (Player) sender;
 			UUID playerId = player.getUniqueId();
 			if (args.length == 0) {
-				if (!whenMined.containsKey(playerId) || System.currentTimeMillis() >= whenMined.get(playerId)
-						+ (Main.main.getConfig().getInt("command-cooldown") * 1000)) {
+				if (player.hasPermission("blockminer.commands.cmdcooldown") || !whenMined.containsKey(playerId)
+						|| System.currentTimeMillis() >= whenMined.get(playerId)
+								+ (Main.main.getConfig().getInt("command-cooldown") * 1000)) {
 					miner.mine(player);
 					whenMined.put(playerId, System.currentTimeMillis());
 					return true;
@@ -45,12 +46,19 @@ public class Commands implements CommandExecutor {
 				}
 			} else {
 				if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-					Main.main.reloadConfig();
-					player.sendMessage(ChatColor.GREEN + "Succesfully reloaded config file!");
-					return true;
+					if (player.hasPermission("blockminer.commands.reload")) {
+						Main.main.reloadConfig();
+						player.sendMessage(ChatColor.GREEN + "Succesfully reloaded config file!");
+						return true;
+					} else {
+						player.sendMessage(
+								ChatColor.RED + "You do not have the sufficient permissions to use this command");
+						return true;
+					}
 				}
 			}
-
+			player.sendMessage(ChatColor.RED + "Unknown command...");
+			return true;
 		}
 		return false;
 	}

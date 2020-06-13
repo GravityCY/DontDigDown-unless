@@ -46,12 +46,14 @@ public class Miner {
 			int blockSoundPlayed = 0;
 
 			Location blockPos = blockUnderPlayer;
-			while (blockPos.add(0, -1, 0).getBlock().getType() != Material.BEDROCK && blockPos.getBlockY() >= 0) {
+			while (blockPos.add(0, -1, 0).getBlock().getType() != Material.BEDROCK
+					&& blockPos.getBlockY() >= 0) {
 
 				Block block = blockPos.getBlock();
 				if (block.getType() != Material.AIR) {
 					if (block.isLiquid()) {
-						if (Main.main.getConfig().getBoolean("use-bucket-to-remove-liquids") && isLiquidSource(block)
+						if (Main.main.getConfig().getBoolean("use-bucket-to-remove-liquids")
+								&& isLiquidSource(block)
 								&& player.getInventory().contains(Material.BUCKET)) {
 							int bucketIndex = player.getInventory().first(Material.BUCKET);
 							ItemStack bucket = player.getInventory().getItem(bucketIndex);
@@ -133,7 +135,8 @@ public class Miner {
 
 		blockCheck = blockUnder.getRelative(1, 0, 0);
 		if (!blockCheck.isPassable()) {
-			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable()
+					&& blockCheck.getRelative(0, 2, 0).isPassable()) {
 				Location telLoc = blockCheck.getLocation().clone();
 				telLoc.setPitch(player.getLocation().getPitch());
 				telLoc.setYaw(player.getLocation().getYaw());
@@ -144,7 +147,8 @@ public class Miner {
 		}
 		blockCheck = blockUnder.getRelative(-1, 0, 0);
 		if (!blockCheck.isPassable()) {
-			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable()
+					&& blockCheck.getRelative(0, 2, 0).isPassable()) {
 				Location telLoc = blockCheck.getLocation().clone();
 				telLoc.setPitch(player.getLocation().getPitch());
 				telLoc.setYaw(player.getLocation().getYaw());
@@ -155,7 +159,8 @@ public class Miner {
 		}
 		blockCheck = blockUnder.getRelative(0, 0, 1);
 		if (!blockCheck.isPassable()) {
-			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable()
+					&& blockCheck.getRelative(0, 2, 0).isPassable()) {
 				Location telLoc = blockCheck.getLocation().clone();
 				telLoc.setPitch(player.getLocation().getPitch());
 				telLoc.setYaw(player.getLocation().getYaw());
@@ -166,7 +171,8 @@ public class Miner {
 		}
 		blockCheck = blockUnder.getRelative(0, 0, -1);
 		if (!blockCheck.isPassable()) {
-			if (blockCheck.getRelative(0, 1, 0).isPassable() && blockCheck.getRelative(0, 2, 0).isPassable()) {
+			if (blockCheck.getRelative(0, 1, 0).isPassable()
+					&& blockCheck.getRelative(0, 2, 0).isPassable()) {
 				Location telLoc = blockCheck.getLocation().clone();
 				telLoc.setPitch(player.getLocation().getPitch());
 				telLoc.setYaw(player.getLocation().getYaw());
